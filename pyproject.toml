@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Chris <goabonga@pm.me>
+
+# uv workspace root. The three deployable packages live under
+# packages/* and each has its own version line and CHANGELOG, managed
+# independently by multicz.
+
+[project]
+name = "monorepo"
+version = "0.0.0"
+description = "uv workspace demo: three packages versioned independently by multicz."
+requires-python = ">=3.11"
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "N", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["packages/api/tests", "packages/cli/tests", "packages/worker/tests"]
+addopts = "-q"
