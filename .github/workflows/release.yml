@@ -36,7 +36,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - run: uv sync --frozen
+      - run: uv sync --frozen --all-packages
 
       - uses: goabonga/multicz-action@v1
 
