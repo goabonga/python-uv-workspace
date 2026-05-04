@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Chris <goabonga@pm.me>
+
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+.idea/
+.vscode/
+*.swp
+.DS_Store
