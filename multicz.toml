@@ -1,0 +1,40 @@
+# multicz config: 3 independent components in a single uv workspace.
+#
+# Each package under packages/<name>/ owns:
+#   - its own version (pyproject.toml [project].version)
+#   - its own CHANGELOG.md
+#   - its own git tag (<name>-vX.Y.Z)
+#
+# Conventional-commit scopes route bumps to the right component:
+#   feat(api): ...      bumps `api` only
+#   fix(cli): ...       bumps `cli` only
+#   feat(worker): ...   bumps `worker` only
+#   feat: ...           (no scope) propagates per `bump_policy = "as-commit"`,
+#                        which is the multicz default — all three components
+#                        bump if their paths see the change.
+#
+# `post_bump = ["uv lock"]` regenerates uv.lock so the bumped version
+# lands in the lockfile in the same release commit.
+
+[project]
+commit_convention = "conventional"
+tag_format        = "{component}-v{version}"
+initial_version   = "0.0.0"
+
+[components.api]
+paths      = ["packages/api/**"]
+bump_files = [{ file = "packages/api/pyproject.toml", key = "project.version" }]
+changelog  = "packages/api/CHANGELOG.md"
+post_bump  = ["uv lock"]
+
+[components.cli]
+paths      = ["packages/cli/**"]
+bump_files = [{ file = "packages/cli/pyproject.toml", key = "project.version" }]
+changelog  = "packages/cli/CHANGELOG.md"
+post_bump  = ["uv lock"]
+
+[components.worker]
+paths      = ["packages/worker/**"]
+bump_files = [{ file = "packages/worker/pyproject.toml", key = "project.version" }]
+changelog  = "packages/worker/CHANGELOG.md"
+post_bump  = ["uv lock"]
