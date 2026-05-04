@@ -27,6 +27,11 @@ target-version = "py311"
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM", "N", "RUF"]
 
+[tool.ruff.lint.isort]
+# Workspace members - so isort groups them under first-party (after a
+# blank line below third-party imports) instead of mixing them in.
+known-first-party = ["api", "cli", "worker"]
+
 [tool.pytest.ini_options]
 testpaths = ["packages/api/tests", "packages/cli/tests", "packages/worker/tests"]
 addopts = "-q"
