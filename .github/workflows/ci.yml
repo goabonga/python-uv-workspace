@@ -1,0 +1,79 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Chris <goabonga@pm.me>
+
+# CI is gated by `multicz changed`: a per-package test job only runs
+# when that package's files actually moved. Lint + validate always run.
+
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - id: changed
+        uses: goabonga/multicz-action/changed@v1
+        with:
+          output: json
+
+      - id: list
+        env:
+          CHANGED_JSON: ${{ steps.changed.outputs.json }}
+        run: |
+          set -euo pipefail
+          echo "list=$(echo "$CHANGED_JSON" | jq -c '.changed')" >> "$GITHUB_OUTPUT"
+
+  test:
+    needs: detect
+    if: needs.detect.outputs.list != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.detect.outputs.list) }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          python-version: "3.11"
+
+      - name: Install workspace
+        run: uv sync --frozen
+
+      - name: Run pytest for ${{ matrix.package }}
+        run: uv run pytest packages/${{ matrix.package }}/tests -q
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          python-version: "3.11"
+
+      - run: uv sync --frozen
+
+      - run: uv run ruff check packages
+
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: goabonga/multicz-action@v1
+
+      - run: multicz validate --strict
