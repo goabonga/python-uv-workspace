@@ -3,7 +3,7 @@
 
 [project]
 name = "worker"
-version = "0.0.0"
+version = "0.1.0"
 description = "Tiny polling worker: ticks at a fixed interval."
 requires-python = ">=3.11"
 dependencies = []

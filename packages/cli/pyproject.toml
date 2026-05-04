@@ -3,7 +3,7 @@
 
 [project]
 name = "cli"
-version = "0.0.0"
+version = "0.1.0"
 description = "Tiny click CLI: greet, ping a URL, print version."
 requires-python = ">=3.11"
 dependencies = [

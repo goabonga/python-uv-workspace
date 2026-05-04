@@ -3,7 +3,7 @@
 
 [project]
 name = "api"
-version = "0.0.0"
+version = "0.1.0"
 description = "Tiny FastAPI service exposing /version and /healthz."
 requires-python = ">=3.11"
 dependencies = [
