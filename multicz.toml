@@ -14,12 +14,15 @@
 #                        bump if their paths see the change.
 #
 # `post_bump = ["uv lock"]` regenerates uv.lock so the bumped version
-# lands in the lockfile in the same release commit.
+# lands in the lockfile in the same release commit. The hooks are gated
+# behind `post_bump_policy = "allow"` (default is "deny" — shell
+# execution from config is opt-in).
 
 [project]
 commit_convention = "conventional"
 tag_format        = "{component}-v{version}"
 initial_version   = "0.0.0"
+post_bump_policy  = "allow"
 
 [components.api]
 paths      = ["packages/api/**"]
